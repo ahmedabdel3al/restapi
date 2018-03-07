@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -22,20 +22,20 @@ Route::resource('buyers','Buyer\BuyerController',['only'=>['index','show']]);
 /**
  * category route
  */
-Route::resource('categories','Category\CategoryController',['except'=>['index','edit']]);
+Route::resource('categories','Category\CategoryController',['except'=>['create','edit']]);
 /**
  * product route
  */
-Route::resource('products','Product\ProductController',['only'=>['index','edit']]);
+Route::resource('products','Product\ProductController',['only'=>['index','show']]);
 /**
  * seler route
  */
-Route::resource('selers','Seler\SelerController',['only'=>['index','edit']]);
+Route::resource('selers','Seler\SelerController',['only'=>['index','show']]);
 /**
  * users route
  */
-Route::resource('users','User\SelerController',['except'=>['index','edit']]);
+Route::resource('users','User\UserController',['except'=>['create','edit']]);
 /**
  * transcation route
  */
-Route::resource('transcations','Transcation\TranscationController',['only'=>['index','edit']]);
+Route::resource('transcations','Transcation\TranscationController',['only'=>['index','show']]);

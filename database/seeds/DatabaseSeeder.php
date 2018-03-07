@@ -23,15 +23,15 @@ class DatabaseSeeder extends Seeder
         Transaction::truncate();
         DB::table('category_product')->truncate();
 
-        $usersQuantity = 200;
-        $catrgriesQuantity = 30;
-        $productsQuantity = 1000;
-        $transationsQuantity = 1000;
+        $usersQuantity = 8;
+        $catrgriesQuantity = 4;
+        $productsQuantity = 10;
+        $transationsQuantity = 10;
 
         factory(User::class, $usersQuantity)->create();
         factory(Category::class, $catrgriesQuantity)->create();
         factory(Product::class, $productsQuantity)->create()->each(function ($products) {
-            $categories = Category::all()->random(mt_rand(1, 5))->pluck('id');
+            $categories = Category::all()->random(mt_rand(1, 4))->pluck('id');
             $products->categories()->attach($categories);
         });
         factory(Transaction::class, $transationsQuantity)->create();

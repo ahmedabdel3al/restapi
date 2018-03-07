@@ -48,7 +48,7 @@ $factory->define(Product::class, function (Faker $faker) {
         'quantity' => $faker->numberBetween(1, 10),
         'status' => $faker->randomElement([Product::AVILABLE, Product::UNAVILABLE]),
         'image' => $faker->randomElement(['1.jpg', '2.jpg', '3.jpg']),
-        'seler_id' => User::all()->random()->id,
+        'seler_id' => $faker->numberBetween(1, 5),
 
 
     ];
