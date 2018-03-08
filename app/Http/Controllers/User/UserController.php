@@ -8,6 +8,7 @@ use App\Http\Controllers\ApiController;
 
 class UserController extends ApiController
 {
+
     public function index()
     {
         $users = User::all();
@@ -35,15 +36,15 @@ class UserController extends ApiController
     }
 
 
-    public function show($id)
+    public function show(User $user , $id )
     {
-        $user = User::findOrFail($id);
+       // $user = User::findOrFail($id);
         return $this->showOne($user , 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user, $id)
     {
-        $user = User::findOrFail($id);
+       // $user = User::findOrFail($id);
         $rule = [
             'password' => 'min:6|confirmed' . $user->id,
             'email' => 'email|unique:users',
@@ -51,6 +52,7 @@ class UserController extends ApiController
 
 
         ];
+        $this->validate($request, $rule);
         if ($request->has('name')) {
             $user->name = $request->get('name');
         }
@@ -78,9 +80,9 @@ class UserController extends ApiController
     }
 
 
-    public function destroy($id)
+    public function destroy(User $user )
     {
-        $user = User::findOrFail($id);
+      //  $user = User::findOrFail($id);
         $user->delete();
         return $this->showOne($user , 200);
     }

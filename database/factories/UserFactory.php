@@ -48,14 +48,14 @@ $factory->define(Product::class, function (Faker $faker) {
         'quantity' => $faker->numberBetween(1, 10),
         'status' => $faker->randomElement([Product::AVILABLE, Product::UNAVILABLE]),
         'image' => $faker->randomElement(['1.jpg', '2.jpg', '3.jpg']),
-        'seler_id' => $faker->numberBetween(1, 5),
+        'seler_id' => $faker->numberBetween(1, 4),
 
 
     ];
 });
 $factory->define(Transaction::class, function (Faker $faker) {
     $seler = Seler::has('products')->get()->random();
-    $buyer = User::all()->except($seler->id)->random();
+    $buyer = User::all()->only($faker->numberBetween(5,8))->random();
     return [
         'buyer_id' => $buyer->id,
         'product_id' => $seler->products->random()->id,

@@ -25,8 +25,8 @@ class DatabaseSeeder extends Seeder
 
         $usersQuantity = 8;
         $catrgriesQuantity = 4;
-        $productsQuantity = 10;
-        $transationsQuantity = 10;
+        $productsQuantity = 8;
+        $transationsQuantity = 8;
 
         factory(User::class, $usersQuantity)->create();
         factory(Category::class, $catrgriesQuantity)->create();
