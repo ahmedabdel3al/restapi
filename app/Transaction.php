@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Transaction extends Model
 {
     use softDeletes;
-    protected $fillable=['buyer_id','product_id','quantity'];
+    protected $fillable=['buyer_id','product_id','quantity','id'];
     protected $dates=['delete_at'];
 
 

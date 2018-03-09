@@ -19,7 +19,7 @@ class UserController extends ApiController
     public function store(Request $request)
     {
         $rule = ['name' => 'required',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:6',
             'email' => 'required|email|unique:users'
         ];
 
@@ -29,8 +29,8 @@ class UserController extends ApiController
         $data['verified'] = User::unverified;
         $data['verification_token'] = User::generateVerificationCode();
         $data['admin'] = User::requar_user;
-        $users = User::create($data);
-         return $this->showAll($users , 200);
+        $users =User::create($data);
+        return $this->showOne($users , 200);
 
 
     }
@@ -46,8 +46,8 @@ class UserController extends ApiController
     {
        // $user = User::findOrFail($id);
         $rule = [
-            'password' => 'min:6|confirmed' . $user->id,
-            'email' => 'email|unique:users',
+            'password' => 'min:6|confirmed' ,
+            'email' => 'email|unique:users'. $user->id,
             'admin' => 'im:' . User::requar_user . 'or' . User::admin,
 
 

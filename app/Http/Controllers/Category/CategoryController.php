@@ -2,84 +2,64 @@
 
 namespace App\Http\Controllers\Category;
 
+use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 
 class CategoryController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        $categories = Category::all();
+        return $this->showAll($categories, 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $rule = ['name' => 'required|min:3',
+            'description' => 'required|min:5|max:100',
+        ];
+        $this->validate($request, $rule);
+        $categories = Category::create($request->all());
+        $categories->save();
+        dd($categories);
+        //return $this->showAll($categories, 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+
+    public function show(Category $category)
     {
-        //
+        return $this->showOne($category, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+
+    public function update(Request $request, Category $category)
     {
-        //
+        $rule = ['name' => 'min:3',
+            'description' => 'min:5|max:100',
+        ];
+        $this->validate($request, $rule);
+        if ($request->has('name')) {
+            $category->name = $request->get('name');
+        }
+        if ($request->has('description')) {
+            $category->description = $request->get('description');
+
+        }
+        if (!$category->isDirty()) {
+            return $this->errorMassage('you need to change your value to update ', 409);
+        }
+        $category->save();
+        return response()->json($category, 200);
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return $this->showOne($category,200);
     }
 }

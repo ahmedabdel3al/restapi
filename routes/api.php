@@ -38,4 +38,4 @@ Route::resource('users','User\UserController',['except'=>['create','edit']]);
 /**
  * transcation route
  */
-Route::resource('transcations','Transcation\TranscationController',['only'=>['index','show']]);
+Route::resource('transactions','Transaction\TransactionController',['only'=>['index','show']]);
