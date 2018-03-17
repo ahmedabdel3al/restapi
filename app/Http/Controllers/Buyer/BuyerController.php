@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Buyer;
 
 use App\Buyer;
-use App\Seler;
+use App\Seller;
 use App\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;

@@ -2,7 +2,7 @@
 
 use App\Category;
 use App\Product;
-use App\Seler;
+use App\Seller;
 use App\Transaction;
 use App\User;
 use Faker\Generator as Faker;
@@ -28,7 +28,7 @@ $factory->define(User::class, function (Faker $faker) {
         'remember_token' => str_random('10'),
         'verified' =>  $verified=$faker->randomElement([true, false]),
         'verification_token' => ($verified == true)? null : user::generateVerificationCode(),
-        'verified' => $faker->randomElement([User::admin, User::requar_user]),
+        'admin' => $faker->randomElement([User::admin, User::requar_user]),
 
     ];
 });
@@ -48,13 +48,13 @@ $factory->define(Product::class, function (Faker $faker) {
         'quantity' => $faker->numberBetween(1, 10),
         'status' => $faker->randomElement([Product::AVILABLE, Product::UNAVILABLE]),
         'image' => $faker->randomElement(['1.jpg', '2.jpg', '3.jpg']),
-        'seler_id' => $faker->numberBetween(1, 4),
+        'seller_id' => $faker->numberBetween(1, 4),
 
 
     ];
 });
 $factory->define(Transaction::class, function (Faker $faker) {
-    $seler = Seler::has('products')->get()->random();
+    $seler = Seller::has('products')->get()->random();
     $buyer = User::all()->only($faker->numberBetween(5,8))->random();
     return [
         'buyer_id' => $buyer->id,

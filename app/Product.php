@@ -12,7 +12,8 @@ class Product extends Model
     protected $table ='products';
     const  AVILABLE = 'available';
     const  UNAVILABLE = 'unavailable';
-    protected $fillable = ['name', 'image', 'description', 'seler_id', 'status', 'quantity'];
+    protected $fillable = ['name', 'image', 'description', 'seller_id', 'status', 'quantity'];
+    protected $hidden=['pivot'];
 
     public function isAvilable()
     {
@@ -22,9 +23,9 @@ class Product extends Model
     public function transactions(){
         return $this->hasMany(Transaction::class);
     }
-    public function seler(){
+    public function seller(){
 
-    return $this->belongsTo(Seler::class);
+    return $this->belongsTo(Seller::class);
 
     }
     public function categories(){

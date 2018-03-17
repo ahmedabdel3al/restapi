@@ -5,7 +5,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Seler extends User
+class Seller extends User
 {
     use softDeletes;
     protected $dates=['delete_at'];

@@ -21,13 +21,13 @@ class CreateProductsTable extends Migration
             $table->string('status')->default(Product::UNAVILABLE);
             $table->integer('quantity')->undigned();
             $table->string('image');
-            $table->integer('seler_id')->unsigned();
+            $table->integer('seller_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
 
 
 
-            $table->foreign('seler_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('seller_id')->references('id')->on('users')->onDelete('cascade');
 
         });
     }
