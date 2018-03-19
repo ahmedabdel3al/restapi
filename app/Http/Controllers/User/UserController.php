@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Mail\UserCreated;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends ApiController
 {
@@ -12,7 +14,7 @@ class UserController extends ApiController
     public function index()
     {
         $users = User::all();
-        return $this->showAll($users , 200);
+        return $this->showAll($users,200);
     }
 
 
@@ -29,32 +31,36 @@ class UserController extends ApiController
         $data['verified'] = User::unverified;
         $data['verification_token'] = User::generateVerificationCode();
         $data['admin'] = User::requar_user;
-        $users =User::create($data);
-        return $this->showOne($users , 200);
+        $user = User::create($data);
+        //return $user;
+        return $this->showOne($user, 200);
 
 
     }
 
 
-    public function show(User $user , $id )
+    public function show(User $user)
     {
-       // $user = User::findOrFail($id);
-        return $this->showOne($user , 200);
+        // $user = User::findOrFail($id);
+        return $this->showOne($user, 200);
     }
 
-    public function update(Request $request, User $user, $id)
+    public function update(Request $request, User $user)
     {
        // $user = User::findOrFail($id);
+
         $rule = [
-            'password' => 'min:6|confirmed' ,
-            'email' => 'email|unique:users'. $user->id,
-            'admin' => 'im:' . User::requar_user . 'or' . User::admin,
+            'password' => 'min:6|confirmed',
+            'email' => 'email|unique:users,email,' . $user->id,
+            'admin' => 'in:' . User::requar_user . 'or' . User::admin,
 
 
         ];
+
         $this->validate($request, $rule);
+
         if ($request->has('name')) {
-            $user->name = $request->get('name');
+            $user->name =$request->name;
         }
         if ($request->has('email') && $user->email != $request->get('email')) {
             $user->verified = User::unverified;
@@ -72,7 +78,7 @@ class UserController extends ApiController
             $user->admin = $request->get('admin');
 
         }
-        if(!$user->isDirty()){
+        if (!$user->isDirty()) {
             return $this->errorMassage('you need to change your value to update ', 409);
         }
         $user->save();
@@ -80,10 +86,30 @@ class UserController extends ApiController
     }
 
 
-    public function destroy(User $user )
+    public function destroy(User $user)
     {
-      //  $user = User::findOrFail($id);
+        //  $user = User::findOrFail($id);
         $user->delete();
-        return $this->showOne($user , 200);
+        return $this->showOne($user, 200);
+    }
+
+    public function verify($verification_token)
+    {
+        $user = User::where('verification_token', $verification_token)->firstOrFail();
+        $user->verified = User::verified;
+        $user->verification_token = null;
+        $user->save();
+        return $this->showMassage('your acount is verified');
+    }
+
+    public function resend(User $user)
+    {
+        if ($user->isVerified()) {
+            return $this->errorMassage('your account is verified ', 409);
+        }
+
+                mail::to($user)->send(new UserCreated($user));
+
+        return $this->showMassage('the verification code is sent', 200);
     }
 }

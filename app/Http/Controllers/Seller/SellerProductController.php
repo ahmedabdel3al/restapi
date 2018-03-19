@@ -6,6 +6,7 @@ use App\Product;
 use App\Seller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Storage;
 
 class SellerProductController extends ApiController
 {
@@ -26,7 +27,7 @@ class SellerProductController extends ApiController
         $this->validate($request, $rule);
         $data = $request->all();
         $data['seller_id'] = $id;
-        $data['image'] = '1.jpg';
+        $data['image'] = $request->image->store('');
         $data['status'] = Product::UNAVILABLE;
         $product = Product::create($data);
         return $this->showOne($product, 200);
@@ -43,31 +44,24 @@ class SellerProductController extends ApiController
         $data = $request->all();
 
         if ($id == $product->seller_id) {
-            if($product->categories()->count()==0 && $product->isAvilable()){
-                return $this->errorMassage('you can not update product with out adding first one category to this product',409);
+            if ($product->categories()->count() == 0 && $product->isAvilable()) {
+                return $this->errorMassage('you can not update product with out adding first one category to this product', 409);
             }
-            $product->update($data);
-            if(!$product->isDirty()){
+            if ($request->hasFile('image')) {
+                Storage::delete($product->image);
+                $data['image']=$request->image->store('');;
+            }
+
+             $product->update($data);
+            if (!$product->isDirty()) {
                 $product->save();
-                return $this->showOne($product,201);
+                return $this->showOne($product, 201);
             }
-           return $this->errorMassage('you need to change values to update',409);
+            return $this->errorMassage('you need to change values to update', 409);
 
 
         }
-        return $this->errorMassage('you need to be owner of this product to update sorrry you can not do this update ',409);
-
-
-
-
-
-
-
-
-
-
-
-
+        return $this->errorMassage('you need to be owner of this product to update sorrry you can not do this update ', 409);
     }
 
 
@@ -75,6 +69,7 @@ class SellerProductController extends ApiController
     {
         if ($id == $product->seller_id) {
             $product->delete();
+            Storage::delete($product->image);
             return $this->showOne($product, 200);
         }
         return $this->errorMassage('you are not owner of this products to delete', 409);
